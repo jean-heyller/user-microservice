@@ -1,7 +1,7 @@
 package com.example.usermicroservice.domain.model;
 
 
-import javax.management.relation.Role;
+
 
 public class User {
     private final Long id;
@@ -15,13 +15,14 @@ public class User {
     private final Rol role;
 
 
-    public User(Long id, String name,String lastName, String email, String password,String identification) {
+    public User(Long id, String name,String lastName, String email, String password,String identification,Rol role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.identification = identification;
         this.lastName = lastName;
+        this.role = role;
     }
 
     public Long getId() {
