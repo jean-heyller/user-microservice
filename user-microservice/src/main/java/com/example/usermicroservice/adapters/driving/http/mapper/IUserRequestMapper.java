@@ -9,9 +9,9 @@ import org.mapstruct.Mapping;
 public interface IUserRequestMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "role.name", constant = "rolName")
-    @Mapping(target = "role.id", source = "rolId")
-    @Mapping(target = "role.description", constant = "rolDescription")
+    @Mapping(target = "rol.name", constant = "rolName")
+    @Mapping(target = "rol.id", source = "rolId")
+    @Mapping(target = "rol.description", constant = "rolDescription")
     User addRequestToUser(AddUserRequest addUserRequest);
 
 

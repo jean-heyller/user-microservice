@@ -12,17 +12,17 @@ public class User {
     private String email;
     private String password;
 
-    private final Rol role;
+    private  Rol rol;
 
 
-    public User(Long id, String name,String lastName, String email, String password,String identification,Rol role) {
+    public User(Long id, String name,String lastName, String email, String password,String identification,Rol rol) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.identification = identification;
         this.lastName = lastName;
-        this.role = role;
+        this.rol = rol;
     }
 
     public Long getId() {
@@ -64,13 +64,17 @@ public class User {
 
 
 
-    public Rol getRole() {
-        return role;
+    public Rol getRol() {
+        return rol;
     }
 
 
 
     public String getIdentification() {
         return identification;
+    }
+
+    public void  SetRol(Rol rol){
+        this.rol = rol;
     }
 }
