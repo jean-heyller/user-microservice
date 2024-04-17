@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @AllArgsConstructor
@@ -31,6 +32,6 @@ public class AddUserRequest {
     @Size(min = 8, message = AdapterConstants.FIELD_PASSWORD_SIZE_MESSAGE)
     private final String password;
 
-    @NotBlank(message = AdapterConstants.FIELD_ROLE_NULL_MESSAGE)
+    @NotNull(message = AdapterConstants.FIELD_ROLE_NULL_MESSAGE)
     private final Long rolId;
 }

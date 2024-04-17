@@ -7,7 +7,9 @@ import com.example.usermicroservice.adapters.driven.jpa.mysql.mapper.IUserEntity
 import com.example.usermicroservice.adapters.driven.jpa.mysql.repository.IRolRepository;
 import com.example.usermicroservice.adapters.driven.jpa.mysql.repository.IUserRepository;
 import com.example.usermicroservice.domain.api.IRolServicePort;
+import com.example.usermicroservice.domain.api.IUserServicePort;
 import com.example.usermicroservice.domain.api.usecase.RolUseCase;
+import com.example.usermicroservice.domain.api.usecase.UserUseCase;
 import com.example.usermicroservice.domain.spi.IRolPersistencePort;
 import com.example.usermicroservice.domain.spi.IUserPersistencePort;
 import lombok.RequiredArgsConstructor;
@@ -41,9 +43,10 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public RolUseCase rolUseCase(){
-        return new RolUseCase(rolPersistencePort());
+    public IUserServicePort userServicePort(){
+        return new UserUseCase(userPersistencePort());
     }
+
 
 
 }
