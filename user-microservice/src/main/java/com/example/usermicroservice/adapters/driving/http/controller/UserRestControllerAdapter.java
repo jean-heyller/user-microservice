@@ -6,6 +6,7 @@ import com.example.usermicroservice.domain.api.IUserServicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,11 +19,13 @@ import javax.validation.Valid;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 @Validated
+@PreAuthorize("denyAll()")
 public class UserRestControllerAdapter {
 
     private final IUserRequestMapper userRequestMapper;
     private final IUserServicePort userServicePort;
 
+    @PreAuthorize("hasAuthority('WRITE')")
     @PostMapping("/")
     public ResponseEntity<Void> addUser(@Valid @RequestBody AddUserRequest request){
         userServicePort.saveUser(userRequestMapper.addRequestToUser(request));

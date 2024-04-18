@@ -6,6 +6,7 @@ import com.example.usermicroservice.domain.api.IRolServicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,11 +19,12 @@ import javax.validation.Valid;
 @RequestMapping("/rol")
 @RequiredArgsConstructor
 @Validated
+@PreAuthorize("denyAll()")
 public class RolRequestControllerAdapter {
 
     private final IRolRequestMapper rolRequestMapper;
     private final IRolServicePort rolServicePort;
-
+    @PreAuthorize("hasAnyAuthority('READ')")
     @PostMapping("/")
     public ResponseEntity<Void> addRol(@Valid @RequestBody AddRolRequest request){
         rolServicePort.saveRol(rolRequestMapper.addRequestToRol(request));

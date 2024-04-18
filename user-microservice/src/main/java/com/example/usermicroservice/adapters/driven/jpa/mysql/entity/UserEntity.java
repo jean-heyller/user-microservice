@@ -1,9 +1,6 @@
 package com.example.usermicroservice.adapters.driven.jpa.mysql.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class UserEntity {
 
     @Id
@@ -29,15 +27,29 @@ public class UserEntity {
     @Column(length = 50)
     private String identification;
 
-    @Column(length = 50)
+    @Column(length = 50, unique = true)
     private String email;
 
-    @Column(length = 50)
+
     private String password;
 
     @ManyToOne
     @JoinColumn(name = "id_rol")
     private RolEntity rol;
+
+    @Column(name = "is_enabled")
+    private Boolean isEnabled;
+
+    @Column(name = "is_account_non_expired")
+    private Boolean isAccountNonExpired;
+
+    @Column(name = "is_account_non_locked")
+    private Boolean isAccountNonLocked;
+
+    @Column(name = "is_credentials_non_expired")
+    private Boolean isCredentialsNonExpired;
+
+
 
 
 }

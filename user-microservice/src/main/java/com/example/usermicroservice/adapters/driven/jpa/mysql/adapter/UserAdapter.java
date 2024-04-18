@@ -10,6 +10,7 @@ import com.example.usermicroservice.adapters.driven.jpa.mysql.repository.IUserRe
 import com.example.usermicroservice.domain.model.User;
 import com.example.usermicroservice.domain.spi.IUserPersistencePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
@@ -28,6 +29,12 @@ public class UserAdapter implements IUserPersistencePort {
 
     private final IUserEntityMapper userEntityMapper;
 
+
+    private final BCryptPasswordEncoder passwordEncoder;
+
+
+
+
     @Override
     public void saveUser(User user) {
         String normalizedNames = user.getName().toLowerCase();
@@ -40,8 +47,13 @@ public class UserAdapter implements IUserPersistencePort {
         if (rolEntityOptional.isEmpty()) {
             throw new DataNotFoundException(ROLE_EXISTS_ERROR_MESSAGE);
         }
+
+
         RolEntity rolEntity = rolEntityOptional.get();
+
         user.SetRol(rolEntityMapper.toModel(rolEntity));
+        String encryptedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encryptedPassword);
         userRepository.save(userEntityMapper.toEntity(user));
 
     }
