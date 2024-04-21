@@ -1,5 +1,6 @@
 package com.example.usermicroservice.configuration.exceptionhandler;
 
+import com.example.usermicroservice.adapters.driven.jpa.mysql.exceptions.DataNotFoundException;
 import com.example.usermicroservice.adapters.driven.jpa.mysql.exceptions.ValueAlreadyExitsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,5 +46,11 @@ public class ControllerAdvisor {
     public ResponseEntity<ExceptionResponse> handleValueAlreadyExistsException(ValueAlreadyExitsException ex) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(
                 ex.getMessage() + Constants.VALUE_ALREADY_EXISTS_EXCEPTION, HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleDataNotFoundException(DataNotFoundException ex) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(
+                ex.getMessage() + Constants.DATA_NOT_FOUND_EXCEPTION_MESSAGE, HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
 }
