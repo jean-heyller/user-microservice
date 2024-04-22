@@ -1,6 +1,8 @@
 package com.example.usermicroservice.adapters.driving.http.controller;
 
+import com.example.usermicroservice.adapters.Service.UserDetailServiceImpl;
 import com.example.usermicroservice.adapters.driving.http.dto.request.AddUserRequest;
+import com.example.usermicroservice.adapters.driving.http.dto.response.AuthResponse;
 import com.example.usermicroservice.adapters.driving.http.mapper.IUserRequestMapper;
 import com.example.usermicroservice.domain.api.IUserServicePort;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,14 @@ public class UserRestControllerAdapter {
     private final IUserRequestMapper userRequestMapper;
     private final IUserServicePort userServicePort;
 
-    @PreAuthorize("hasAuthority('WRITE')")
+    private final UserDetailServiceImpl userDetailService;
+
+    public ResponseEntity<AuthResponse> login(AuthLoginRequest userRequest){
+        return new ResponseEntity<>(this.loginUser(userRequest), HttpStatus.OK);
+
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<Void> addUser(@Valid @RequestBody AddUserRequest request){
         userServicePort.saveUser(userRequestMapper.addRequestToUser(request));

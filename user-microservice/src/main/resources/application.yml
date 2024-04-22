@@ -10,3 +10,6 @@ spring:
     hibernate:
       ddl-auto: update
       dialect: org.hibernate.dialect.MySQL5Dialect
+
+security.jwt.private-key: "964ffdb5e95797ad2be8a036924d97a1df90a004b69e25093959be7d5104601b"
+security.jwt.user.generator: "ADMIN"
