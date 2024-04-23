@@ -13,6 +13,8 @@ import javax.persistence.*;
 @Builder
 public class UserEntity {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,13 +25,11 @@ public class UserEntity {
     @Column(length = 50)
     private String lastName;
 
-
     @Column(length = 50)
     private String identification;
 
     @Column(length = 50, unique = true)
     private String email;
-
 
     private String password;
 
@@ -38,17 +38,16 @@ public class UserEntity {
     private RolEntity rol;
 
     @Column(name = "is_enabled")
-    private Boolean isEnabled;
+    private Boolean isEnabled = true;
 
     @Column(name = "is_account_non_expired")
-    private Boolean isAccountNonExpired;
+    private Boolean isAccountNonExpired = true;
 
     @Column(name = "is_account_non_locked")
-    private Boolean isAccountNonLocked;
+    private Boolean isAccountNonLocked = true;
 
     @Column(name = "is_credentials_non_expired")
-    private Boolean isCredentialsNonExpired;
-
+    private Boolean isCredentialsNonExpired = true;
 
 
 

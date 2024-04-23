@@ -16,32 +16,35 @@ public class UserMicroserviceApplication {
 		SpringApplication.run(UserMicroserviceApplication.class, args);
 	}
 
-	/*@Bean
+	@Bean
 	CommandLineRunner init(IUserRepository userRepository, IRolRepository rolRepository) {
 		return (args) -> {
-			RolEntity rolEntity = RolEntity.builder().
-					name("ADMIN").
-					description("Administrator")
-					.build();
+			String[] roles = {"ADMIN", "STUDENT", "TUTOR"};
+			for (String role : roles) {
+				RolEntity rolEntity = RolEntity.builder()
+						.name(role)
+						.description(role + " role")
+						.build();
+				rolEntity = rolRepository.save(rolEntity);
 
-			// Guarda la entidad RolEntity en la base de datos
-			rolEntity = rolRepository.save(rolEntity);
-
-			UserEntity userEntity = UserEntity.builder().
-					name("John").
-					lastName("Doe").
-					identification("123456789").
-					email("jhon@hotmail.com").
-					password("$2a$10$Oa7fcVim9W6VeJmWfD/1be0qeh5N77rJBD6DKQx.VkM1HivNjIaOK").
-					isEnabled(true).
-					isAccountNonExpired(true).
-					isAccountNonLocked(true).
-					isCredentialsNonExpired(true).
-					rol(rolEntity) // Ahora rolEntity es una entidad persistente
-					.build();
-
-			userRepository.save(userEntity);
+				for (int i = 1; i <= 4; i++) {
+					UserEntity userEntity = UserEntity.builder()
+							.name(role + "User" + i)
+							.lastName(role + "LastName" + i)
+							.identification(role + "Id" + i)
+							.email(role.toLowerCase() + "user" + i + "@hotmail.com")
+							.password("$2a$10$Oa7fcVim9W6VeJmWfD/1be0qeh5N77rJBD6DKQx.VkM1HivNjIaOK")
+							.isEnabled(true)
+							.isAccountNonExpired(true)
+							.isAccountNonLocked(true)
+							.isCredentialsNonExpired(true)
+							.rol(rolEntity)
+							.build();
+					userRepository.save(userEntity);
+				}
+			}
 		};
-	}*/
+	}
+
 
 }

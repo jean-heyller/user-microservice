@@ -4,6 +4,7 @@ package com.example.usermicroservice.adapters.security;
 import com.example.usermicroservice.adapters.Service.UserDetailServiceImpl;
 import com.example.usermicroservice.adapters.util.JwtUtils;
 import com.example.usermicroservice.configuration.filter.JwtTokenValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -28,12 +29,12 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@ComponentScan(basePackages = "com.example.usermicroservice.adapters.driven.jpa.mysql.adapter")
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
 
-    @Autowired
-    private JwtUtils jwtUtils;
+
+    private final JwtUtils jwtUtils;
 
 
 

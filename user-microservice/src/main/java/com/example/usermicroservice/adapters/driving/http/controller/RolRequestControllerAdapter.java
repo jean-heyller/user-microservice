@@ -24,7 +24,7 @@ public class RolRequestControllerAdapter {
 
     private final IRolRequestMapper rolRequestMapper;
     private final IRolServicePort rolServicePort;
-    @PreAuthorize("hasAnyAuthority('READ')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<Void> addRol(@Valid @RequestBody AddRolRequest request){
         rolServicePort.saveRol(rolRequestMapper.addRequestToRol(request));

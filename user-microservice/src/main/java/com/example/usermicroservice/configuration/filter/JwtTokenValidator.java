@@ -3,7 +3,8 @@ package com.example.usermicroservice.configuration.filter;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.usermicroservice.adapters.util.JwtUtils;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,12 +23,11 @@ import java.util.Collection;
 import java.util.Collections;
 
 
+@RequiredArgsConstructor
 public class JwtTokenValidator extends OncePerRequestFilter {
 
-    private JwtUtils jwtUtils;
-    public JwtTokenValidator(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
-    }
+    private final JwtUtils jwtUtils;
+
 
 
 
@@ -39,26 +39,25 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String jwtToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if(jwtToken != null){
-            jwtToken = jwtToken.replace("Bearer ", "");
+
+        if (jwtToken != null){
+
+            jwtToken = jwtToken.substring(7);
             DecodedJWT decodedJWT = jwtUtils.validateToken(jwtToken);
 
             String username = jwtUtils.getUserNameFromToken(decodedJWT);
+            String authorities = jwtUtils.getSpecificClaim(decodedJWT, "authorities").asString();
 
-            String StringAuthorities = jwtUtils.getSpecificClaim(decodedJWT, "authorities").asString();
-
-            Collection<? extends GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(StringAuthorities);
+            Collection<? extends GrantedAuthority> autoritiesList = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
 
             SecurityContext context = SecurityContextHolder.getContext();
-
-            Authentication authentication = new new UsernamePasswordAuthenticationToken(username, null, authorities);
+            Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, autoritiesList);
 
             context.setAuthentication(authentication);
-
-            SecurityContextHolder.clearContext();
+            SecurityContextHolder.setContext(context);
 
         }
-        filterChain.doFilter(request, response);
 
+        filterChain.doFilter(request, response);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.usermicroservice.configuration.exceptionhandler;
 
 import com.example.usermicroservice.adapters.driven.jpa.mysql.exceptions.DataNotFoundException;
+import com.example.usermicroservice.adapters.driven.jpa.mysql.exceptions.PermissionDeniedCreateUserException;
 import com.example.usermicroservice.adapters.driven.jpa.mysql.exceptions.ValueAlreadyExitsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -52,5 +53,11 @@ public class ControllerAdvisor {
     public ResponseEntity<ExceptionResponse> handleDataNotFoundException(DataNotFoundException ex) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(
                 ex.getMessage() + Constants.DATA_NOT_FOUND_EXCEPTION_MESSAGE, HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(PermissionDeniedCreateUserException.class)
+    public ResponseEntity<ExceptionResponse> handlePermissionDeniedCreateUserException(PermissionDeniedCreateUserException ex) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(
+                Constants.PERMISSION_DENIED_CREATE_USER_EXCEPTION_MESSAGE, HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
 }

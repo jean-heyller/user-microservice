@@ -10,6 +10,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Date;
 import java.util.Map;
@@ -19,24 +20,24 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtils {
 
-    @Value("${security.jwt.private-key:")
+    @Value("${private-key}")
     private String privateKey;
 
-    @Value("${security.jwt.user.generator}")
-    private String uSerGenerator;
+    @Value("${user-generator}")
+    private String userGenerator;
 
 
     public String createToken(Authentication authentication) {
         Algorithm algorithm = Algorithm.HMAC256(this.privateKey);
 
         String username = authentication.getPrincipal().toString();
-        String auythorities = authentication.getAuthorities().stream().map
-                (a -> a.getAuthority()).collect(Collectors.joining(","));
+        String authorities = authentication.getAuthorities()
+                .stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 
         String token = JWT.create()
-                .withIssuer(this.uSerGenerator)
+                .withIssuer(this.userGenerator)
                 .withSubject(username)
-                .withClaim("authorities", auythorities)
+                .withClaim("authorities", authorities)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 7200000))
                 .withJWTId(UUID.randomUUID().toString())
@@ -49,22 +50,21 @@ public class JwtUtils {
 
 
 
-        public DecodedJWT validateToken(String token){
-            try{
-                Algorithm algorithm  = Algorithm.HMAC256(this.privateKey);
+    public DecodedJWT validateToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(this.privateKey);
 
-                JWTVerifier verifier = JWT.require(algorithm)
-                        .withIssuer(this.uSerGenerator)
-                        .build();
-                verifier.verify(token);
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withIssuer(this.userGenerator)
+                    .build();
 
-                DecodedJWT decodedJWT = JWT.decode(token);
-                return decodedJWT;
-            }catch (Exception e){
-                throw new JWTVerificationException("Invalid token");
+            DecodedJWT decodedJWT = verifier.verify(token);
+            return decodedJWT;
+        } catch (JWTVerificationException exception) {
+            throw new JWTVerificationException("Token invalid, not Authorized");
         }
 
-    }
+}
 
     public String getUserNameFromToken(DecodedJWT decodedJWT){
         return decodedJWT.getSubject().toString();

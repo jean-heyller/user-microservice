@@ -2,10 +2,10 @@ package com.example.usermicroservice.adapters.driving.http.controller;
 
 import com.example.usermicroservice.adapters.Service.UserDetailServiceImpl;
 import com.example.usermicroservice.adapters.driving.http.dto.request.AddUserRequest;
+import com.example.usermicroservice.adapters.driving.http.dto.request.AuthLoginRequest;
 import com.example.usermicroservice.adapters.driving.http.dto.response.AuthResponse;
-import com.example.usermicroservice.adapters.driving.http.mapper.IUserRequestMapper;
-import com.example.usermicroservice.domain.api.IUserServicePort;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,26 +18,31 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Validated
-@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
-public class UserRestControllerAdapter {
+@PreAuthorize("permitAll()")
+public class AuthenticactionController {
 
-    private final IUserRequestMapper userRequestMapper;
-    private final IUserServicePort userServicePort;
 
     private final UserDetailServiceImpl userDetailService;
 
 
 
+    @PostMapping("/login")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthLoginRequest userRequest){
+        return new ResponseEntity<>(this.userDetailService.loginUser(userRequest), HttpStatus.OK);
 
-
-    @PostMapping("/")
-    public ResponseEntity<Void> addUser(@Valid @RequestBody AddUserRequest request){
-        this.userDetailService.ValidateUser(request.getRolId());
-        userServicePort.saveUser(userRequestMapper.addRequestToUser(request));
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+//    @PostMapping("/sign up")
+//    public ResponseEntity<Void> signUp(@RequestBody @Valid AddUserRequest userRequest){
+//        this.userDetailService.createUser(userRequest);
+//        return ResponseEntity.status(HttpStatus.CREATED).build();
+//    }
+
+
+
 
 }
