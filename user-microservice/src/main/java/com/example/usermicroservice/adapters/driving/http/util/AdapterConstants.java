@@ -40,9 +40,9 @@ public class AdapterConstants {
 
     public static final String FIELD_ROLE_NULL_MESSAGE = "`role` cannot be null";
 
-    public static final String ROL_AMIN = "ROL_ADMIN";
+    public static final String ROL_AMIN = "ROLE_ADMIN";
 
-    public static final String ROL_TUTOR = "ROL_TUTOR";
+    public static final String ROL_TUTOR = "ROLE_TUTOR";
 
 
 }

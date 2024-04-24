@@ -9,6 +9,7 @@ import com.example.usermicroservice.adapters.driven.jpa.mysql.repository.IRolRep
 import com.example.usermicroservice.adapters.driven.jpa.mysql.repository.IUserRepository;
 import com.example.usermicroservice.adapters.driving.http.dto.request.AuthLoginRequest;
 import com.example.usermicroservice.adapters.driving.http.dto.response.AuthResponse;
+import com.example.usermicroservice.adapters.driving.http.util.AdapterConstants;
 import com.example.usermicroservice.adapters.util.JwtUtils;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -100,9 +101,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = loadUserByUsername((String) authentication.getPrincipal());
         boolean isAdmin = userDetails.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AdapterConstants.ROL_AMIN));
         boolean isTutor = userDetails.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_TUTOR"));
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AdapterConstants.ROL_TUTOR));
         if ((!isAdmin && !isTutor) || (isTutor && (rol.equals("ADMIN") || rol.equals("TUTOR")))) {
             throw new PermissionDeniedCreateUserException();
         }
