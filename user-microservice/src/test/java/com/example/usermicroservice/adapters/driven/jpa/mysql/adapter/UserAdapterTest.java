@@ -22,7 +22,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-public class UserAdapterTest {
+ class UserAdapterTest {
 
     @Mock
     private IUserRepository userRepository;
@@ -48,7 +48,7 @@ public class UserAdapterTest {
     }
 
     @Test
-    public void testSaveUser() {
+     void testSaveUser() {
         Rol rol = new Rol(1L, "ADMIN", "Administrator role");
         User user = new User(1L, "John", "Doe", "john.doe@example.com", "password123", "1234567890", rol);
         RolEntity rolEntity = new RolEntity(1L, "ADMIN", "Administrator role");
@@ -63,7 +63,7 @@ public class UserAdapterTest {
     }
 
     @Test
-    public void testSaveUserThrowsValueAlreadyExistsException() {
+     void testSaveUserThrowsValueAlreadyExistsException() {
         Rol rol = new Rol(1L, "ADMIN", "Administrator role");
         User user = new User(1L, "John", "Doe", "john.doe@example.com", "password123", "1234567890", rol);
         UserEntity userEntity = new UserEntity();
@@ -75,7 +75,7 @@ public class UserAdapterTest {
     }
 
     @Test
-    public void testSaveUserThrowsDataNotFoundException() {
+     void testSaveUserThrowsDataNotFoundException() {
         Rol rol = new Rol(1L, "ADMIN", "Administrator role");
         User user = new User(1L, "John", "Doe", "john.doe@example.com", "password123", "1234567890", rol);
 
