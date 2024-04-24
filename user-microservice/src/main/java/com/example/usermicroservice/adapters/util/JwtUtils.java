@@ -34,7 +34,7 @@ public class JwtUtils {
         String authorities = authentication.getAuthorities()
                 .stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 
-        String token = JWT.create()
+        return JWT.create()
                 .withIssuer(this.userGenerator)
                 .withSubject(username)
                 .withClaim("authorities", authorities)
@@ -44,7 +44,7 @@ public class JwtUtils {
                 .withNotBefore(new Date(System.currentTimeMillis()))
                 .sign(algorithm);
 
-        return token;
+
 
     }
 
@@ -58,16 +58,14 @@ public class JwtUtils {
                     .withIssuer(this.userGenerator)
                     .build();
 
-            DecodedJWT decodedJWT = verifier.verify(token);
-            return decodedJWT;
+            return verifier.verify(token);
         } catch (JWTVerificationException exception) {
             throw new JWTVerificationException("Token invalid, not Authorized");
         }
-
-}
+    }
 
     public String getUserNameFromToken(DecodedJWT decodedJWT){
-        return decodedJWT.getSubject().toString();
+        return decodedJWT.getSubject();
     }
 
     public Claim getSpecificClaim(DecodedJWT decodedJWT, String claim){

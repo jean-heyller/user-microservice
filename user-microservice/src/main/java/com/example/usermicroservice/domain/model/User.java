@@ -74,7 +74,7 @@ public class User {
         return identification;
     }
 
-    public void  SetRol(Rol rol){
+    public void  setRole(Rol rol){
         this.rol = rol;
     }
 }

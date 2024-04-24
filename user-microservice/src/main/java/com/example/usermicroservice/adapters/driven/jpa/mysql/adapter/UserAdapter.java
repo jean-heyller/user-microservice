@@ -51,7 +51,7 @@ public class UserAdapter implements IUserPersistencePort {
 
         RolEntity rolEntity = rolEntityOptional.get();
 
-        user.SetRol(rolEntityMapper.toModel(rolEntity));
+        user.setRole(rolEntityMapper.toModel(rolEntity));
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
         userRepository.save(userEntityMapper.toEntity(user));

@@ -14,14 +14,14 @@ class AddUserRequestTest {
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
-    public void testValidAddUserRequest() {
+     void testValidAddUserRequest() {
         AddUserRequest request = new AddUserRequest("John", "Doe", "1234567890", "john.doe@example.com", "password123", 1L);
         Set<ConstraintViolation<AddUserRequest>> violations = validator.validate(request);
         assertTrue(violations.isEmpty());
     }
 
     @Test
-    public void testInvalidName() {
+     void testInvalidName() {
         AddUserRequest request = new AddUserRequest("", "Doe", "1234567890", "john.doe@example.com", "password123", 1L);
         Set<ConstraintViolation<AddUserRequest>> violations = validator.validate(request);
         assertFalse(violations.isEmpty());
@@ -29,7 +29,7 @@ class AddUserRequestTest {
     }
 
     @Test
-    public void testInvalidLastName() {
+     void testInvalidLastName() {
         AddUserRequest request = new AddUserRequest("John", "", "1234567890", "john.doe@example.com", "password123", 1L);
         Set<ConstraintViolation<AddUserRequest>> violations = validator.validate(request);
         assertFalse(violations.isEmpty());
@@ -37,7 +37,7 @@ class AddUserRequestTest {
     }
 
     @Test
-    public void testInvalidIdentification() {
+     void testInvalidIdentification() {
         AddUserRequest request = new AddUserRequest("John", "Doe", "", "john.doe@example.com", "password123", 1L);
         Set<ConstraintViolation<AddUserRequest>> violations = validator.validate(request);
         assertFalse(violations.isEmpty());
@@ -45,7 +45,7 @@ class AddUserRequestTest {
     }
 
     @Test
-    public void testInvalidEmail() {
+     void testInvalidEmail() {
         AddUserRequest request = new AddUserRequest("John", "Doe", "1234567890", "invalid email", "password123", 1L);
         Set<ConstraintViolation<AddUserRequest>> violations = validator.validate(request);
         assertFalse(violations.isEmpty());
@@ -53,7 +53,7 @@ class AddUserRequestTest {
     }
 
     @Test
-    public void testInvalidPassword() {
+     void testInvalidPassword() {
         AddUserRequest request = new AddUserRequest("John", "Doe", "1234567890", "john.doe@example.com", "short", 1L);
         Set<ConstraintViolation<AddUserRequest>> violations = validator.validate(request);
         assertFalse(violations.isEmpty());
@@ -61,7 +61,7 @@ class AddUserRequestTest {
     }
 
     @Test
-    public void testInvalidRolId() {
+    void testInvalidRolId() {
         AddUserRequest request = new AddUserRequest("John", "Doe", "1234567890", "john.doe@example.com", "password123", null);
         Set<ConstraintViolation<AddUserRequest>> violations = validator.validate(request);
         assertFalse(violations.isEmpty());

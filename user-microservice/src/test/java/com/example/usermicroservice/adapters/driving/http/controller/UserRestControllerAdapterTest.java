@@ -33,7 +33,7 @@ class UserRestControllerAdapterTest {
     }
 
     @Test
-    public void testAddUser() {
+     void testAddUser() {
         AddUserRequest request = new AddUserRequest("John", "Doe", "1234567890", "john.doe@example.com", "password123", 1L);
         User user = new User(1L, "John", "Doe", "john.doe@example.com", "password123", "1234567890", null);
         when(userRequestMapper.addRequestToUser(request)).thenReturn(user);

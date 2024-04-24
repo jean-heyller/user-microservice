@@ -1,13 +1,11 @@
 package com.example.usermicroservice.adapters.security;
 
 
-import com.example.usermicroservice.adapters.Service.UserDetailServiceImpl;
+import com.example.usermicroservice.adapters.driven.jpa.mysql.adapter.UserDetailServiceImpl;
 import com.example.usermicroservice.adapters.util.JwtUtils;
 import com.example.usermicroservice.configuration.filter.JwtTokenValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import org.springframework.security.authentication.AuthenticationManager;

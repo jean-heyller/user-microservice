@@ -1,8 +1,7 @@
 package com.example.usermicroservice.adapters.driving.http.controller;
 
-import com.example.usermicroservice.adapters.Service.UserDetailServiceImpl;
+import com.example.usermicroservice.adapters.driven.jpa.mysql.adapter.UserDetailServiceImpl;
 import com.example.usermicroservice.adapters.driving.http.dto.request.AddUserRequest;
-import com.example.usermicroservice.adapters.driving.http.dto.response.AuthResponse;
 import com.example.usermicroservice.adapters.driving.http.mapper.IUserRequestMapper;
 import com.example.usermicroservice.domain.api.IUserServicePort;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +32,9 @@ public class UserRestControllerAdapter {
 
 
 
-    @PostMapping("/")
+    @PostMapping("/register")
     public ResponseEntity<Void> addUser(@Valid @RequestBody AddUserRequest request){
-        this.userDetailService.ValidateUser(request.getRolId());
+        this.userDetailService.validateUser(request.getRolId());
         userServicePort.saveUser(userRequestMapper.addRequestToUser(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

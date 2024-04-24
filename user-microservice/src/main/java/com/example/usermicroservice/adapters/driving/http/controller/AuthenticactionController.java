@@ -1,7 +1,6 @@
 package com.example.usermicroservice.adapters.driving.http.controller;
 
-import com.example.usermicroservice.adapters.Service.UserDetailServiceImpl;
-import com.example.usermicroservice.adapters.driving.http.dto.request.AddUserRequest;
+import com.example.usermicroservice.adapters.driven.jpa.mysql.adapter.UserDetailServiceImpl;
 import com.example.usermicroservice.adapters.driving.http.dto.request.AuthLoginRequest;
 import com.example.usermicroservice.adapters.driving.http.dto.response.AuthResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,14 +34,6 @@ public class AuthenticactionController {
         return new ResponseEntity<>(this.userDetailService.loginUser(userRequest), HttpStatus.OK);
 
     }
-
-//    @PostMapping("/sign up")
-//    public ResponseEntity<Void> signUp(@RequestBody @Valid AddUserRequest userRequest){
-//        this.userDetailService.createUser(userRequest);
-//        return ResponseEntity.status(HttpStatus.CREATED).build();
-//    }
-
-
 
 
 }

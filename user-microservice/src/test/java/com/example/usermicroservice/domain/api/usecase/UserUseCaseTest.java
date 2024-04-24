@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 
 
-public class UserUseCaseTest {
+ class UserUseCaseTest {
 
 
     private IUserPersistencePort userPersistencePort;
@@ -29,7 +29,7 @@ public class UserUseCaseTest {
 
 
     @Test
-    public void saveUser() {
+     void saveUser() {
         Rol rol = new Rol(1L, "ADMIN", "administrator");
         User user = new User(1L, "John", "Doe", "john.doe@example.com", "password123", "1234567890", rol);
         userUseCase.saveUser(user);

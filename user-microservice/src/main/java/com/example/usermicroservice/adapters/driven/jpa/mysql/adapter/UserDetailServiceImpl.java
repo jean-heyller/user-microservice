@@ -1,20 +1,20 @@
-package com.example.usermicroservice.adapters.Service;
+package com.example.usermicroservice.adapters.driven.jpa.mysql.adapter;
 
 import com.example.usermicroservice.adapters.driven.jpa.mysql.entity.RolEntity;
 import com.example.usermicroservice.adapters.driven.jpa.mysql.entity.UserEntity;
+import com.example.usermicroservice.adapters.driven.jpa.mysql.exceptions.BadCredentialsException;
+import com.example.usermicroservice.adapters.driven.jpa.mysql.exceptions.DataNotFoundException;
 import com.example.usermicroservice.adapters.driven.jpa.mysql.exceptions.PermissionDeniedCreateUserException;
 import com.example.usermicroservice.adapters.driven.jpa.mysql.repository.IRolRepository;
 import com.example.usermicroservice.adapters.driven.jpa.mysql.repository.IUserRepository;
-import com.example.usermicroservice.adapters.driving.http.dto.request.AddUserRequest;
 import com.example.usermicroservice.adapters.driving.http.dto.request.AuthLoginRequest;
 import com.example.usermicroservice.adapters.driving.http.dto.response.AuthResponse;
 import com.example.usermicroservice.adapters.util.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,17 +29,21 @@ import java.util.List;
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public static final String ROL_NOT_FOUND = "The role";
 
-    @Autowired
-    private IRolRepository rolRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final IRolRepository rolRepository;
+    private final JwtUtils jwtUtils;
+    private final IUserRepository userRepository;
+
+    public UserDetailServiceImpl(PasswordEncoder passwordEncoder, IRolRepository rolRepository, JwtUtils jwtUtils, IUserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.rolRepository = rolRepository;
+        this.jwtUtils = jwtUtils;
+        this.userRepository = userRepository;
+    }
 
 
-    @Autowired
-    private JwtUtils jwtUtils;
-    @Autowired
-    private  IUserRepository userRepository;
 
 
     @Override
@@ -69,21 +73,17 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         String accessToken = jwtUtils.createToken(authentication);
 
-        AuthResponse authResponse = new AuthResponse(username, "User logged successfully", accessToken,true);
-
-        return authResponse;
-
-
+        return new AuthResponse(username, "User logged successfully", accessToken,true);
     }
 
     public Authentication authenticate(String username, String password){
         UserDetails userDetails = loadUserByUsername(username);
         if (userDetails == null){
-            throw new BadCredentialsException("Invalid username or password");
+            throw new BadCredentialsException();
         }
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())){
-            throw new BadCredentialsException("Invalid username or password");
+            throw new BadCredentialsException();
         }
 
         return new UsernamePasswordAuthenticationToken(username,userDetails.getPassword(), userDetails.getAuthorities());
@@ -91,9 +91,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     }
 
-    public void ValidateUser(Long rolId) {
+    public void validateUser(Long rolId) {
         RolEntity rolEntity = rolRepository.findById(rolId)
-                .orElseThrow(() -> new RuntimeException("Rol not found"));
+                .orElseThrow(() -> new DataNotFoundException(ROL_NOT_FOUND));
 
         String rol = rolEntity.getName().toUpperCase();
 
@@ -103,39 +103,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
         boolean isTutor = userDetails.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_TUTOR"));
-        if (!isAdmin && !isTutor) {
-            throw new PermissionDeniedCreateUserException();
-        } else if (isTutor && (rol.equals("ADMIN") || rol.equals("TUTOR"))) {
+        if ((!isAdmin && !isTutor) || (isTutor && (rol.equals("ADMIN") || rol.equals("TUTOR")))) {
             throw new PermissionDeniedCreateUserException();
         }
     }
 
-    public AuthResponse createUser(AddUserRequest addUserRequest){
-        RolEntity newRolEntity = rolRepository.findById(addUserRequest.getRolId())
-                .orElseThrow(() -> new RuntimeException("Rol not found"));
 
-
-        // Crear la nueva cuenta
-        UserEntity user = new UserEntity();
-        user.setEmail(addUserRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(addUserRequest.getPassword()));
-        user.setIsEnabled(true);
-        user.setIsAccountNonExpired(true);
-        user.setIsCredentialsNonExpired(true);
-        user.setIsAccountNonLocked(true);
-        user.setRol(newRolEntity);
-        UserEntity userEntity = userRepository.save(user);
-
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getRol().getName().toUpperCase()));
-
-        Authentication newAuthentication = new UsernamePasswordAuthenticationToken(userEntity.getEmail(),
-                userEntity.getPassword(), authorities);
-
-        String accessToken = jwtUtils.createToken(newAuthentication);
-
-        AuthResponse authResponse = new AuthResponse(userEntity.getEmail(), "User created successfully", accessToken,true);
-
-        return authResponse;
-    }
 }
