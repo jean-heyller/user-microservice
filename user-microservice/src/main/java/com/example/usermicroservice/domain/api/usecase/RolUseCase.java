@@ -18,6 +18,10 @@ public class RolUseCase implements IRolServicePort {
         @Override
         public void saveRol(Rol rol) {
             rolPersistencePort.saveRol(rol);
-
         }
+
+
+
+
+
 }

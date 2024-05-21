@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,17 +25,18 @@ import static org.mockito.Mockito.*;
 
  class UserAdapterTest {
 
+
     @Mock
     private IUserRepository userRepository;
 
     @Mock
     private IRolRepository roleRepository;
 
-    @Mock
-    private IRolEntityMapper rolEntityMapper;
+     @Mock
+     private IRolEntityMapper rolEntityMapper;
 
-    @Mock
-    private IUserEntityMapper userEntityMapper;
+     @Mock
+        private IUserEntityMapper userEntityMapper;
 
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
@@ -45,27 +47,49 @@ import static org.mockito.Mockito.*;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        userAdapter = new UserAdapter(userRepository, roleRepository, rolEntityMapper, userEntityMapper, passwordEncoder);
     }
 
-    @Test
+
+     private Long id = 1L;
+
+     private String name = "John";
+
+     private String lastName = "Doe";
+
+     private String email = "prueba@hotmail.com";
+
+     private String password = "password123";
+
+     private String identification = "1234567890";
+
+     private String phone = "+57 304 291 8990";
+
+     private LocalDate birthDate = LocalDate.of(1990, 12, 12);
+
+     Rol rol = new Rol(1L, "ADMIN", "Administrator role");
+
+     @Test
      void testSaveUser() {
-        Rol rol = new Rol(1L, "ADMIN", "Administrator role");
-        User user = new User(1L, "John", "Doe", "john.doe@example.com", "password123", "1234567890", rol);
-        RolEntity rolEntity = new RolEntity(1L, "ADMIN", "Administrator role");
 
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
-        when(roleRepository.findById(user.getRol().getId())).thenReturn(Optional.of(rolEntity));
-        when(passwordEncoder.encode(user.getPassword())).thenReturn("encryptedPassword");
+         User user = new User(id, name, lastName, email, password, identification, rol, phone, birthDate);
+         RolEntity rolEntity = new RolEntity(1L, "ADMIN", "Administrator role");
 
-        userAdapter.saveUser(user);
+         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+         when(roleRepository.findById(user.getRol().getId())).thenReturn(Optional.of(rolEntity));
+         when(rolEntityMapper.toModel(any(RolEntity.class))).thenReturn(rol);
+         when(passwordEncoder.encode(user.getPassword())).thenReturn("encryptedPassword");
 
-        verify(userRepository).save(any());
-    }
+         userAdapter.saveUser(user);
+
+         verify(userRepository).save(any());
+     }
 
     @Test
      void testSaveUserThrowsValueAlreadyExistsException() {
-        Rol rol = new Rol(1L, "ADMIN", "Administrator role");
-        User user = new User(1L, "John", "Doe", "john.doe@example.com", "password123", "1234567890", rol);
+
+        User user = new User(id, name, lastName, email, password, identification, rol, phone, birthDate);
+
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(user.getEmail());
 
@@ -76,8 +100,8 @@ import static org.mockito.Mockito.*;
 
     @Test
      void testSaveUserThrowsDataNotFoundException() {
-        Rol rol = new Rol(1L, "ADMIN", "Administrator role");
-        User user = new User(1L, "John", "Doe", "john.doe@example.com", "password123", "1234567890", rol);
+
+        User user = new User(id, name, lastName, email, password, identification, rol, phone, birthDate);
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         when(roleRepository.findById(user.getRol().getId())).thenReturn(Optional.empty());

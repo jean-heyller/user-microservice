@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @Getter
@@ -32,6 +33,18 @@ public class AddUserRequest {
     @Size(min = 8, message = AdapterConstants.FIELD_PASSWORD_SIZE_MESSAGE)
     private final String password;
 
+    @NotBlank(message = AdapterConstants.FIELD_PHONE_NULL_MESSAGE)
+    private final String phone;
+
+
+
+    @NotNull(message = AdapterConstants.FIELD_BIRTH_DATE_NULL_MESSAGE)
+    private final LocalDate birthDate;
+
     @NotNull(message = AdapterConstants.FIELD_ROLE_NULL_MESSAGE)
     private final Long rolId;
+
+
+
+
 }

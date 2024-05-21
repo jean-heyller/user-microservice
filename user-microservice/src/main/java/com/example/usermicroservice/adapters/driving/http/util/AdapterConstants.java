@@ -32,6 +32,8 @@ public class AdapterConstants {
 
     public static final String FIELD_EMAIL_SIZE_MESSAGE = "`email` cannot be greater than 50 characters";
 
+    public static final String FIELD_PHONE_NULL_MESSAGE = "`phone` cannot be null";
+
     public static final String FIELD_EMAIL_VALID_MESSAGE = "`email` should be valid";
 
     public static final String FIELD_PASSWORD_NULL_MESSAGE = "`password` cannot be null";
@@ -43,6 +45,10 @@ public class AdapterConstants {
     public static final String ROL_AMIN = "ROLE_ADMIN";
 
     public static final String ROL_TUTOR = "ROLE_TUTOR";
+
+    public static final String FIELD_BIRTH_DATE_NULL_MESSAGE = "`birth date` cannot be null";
+
+
 
 
 }

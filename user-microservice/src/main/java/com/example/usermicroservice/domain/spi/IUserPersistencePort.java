@@ -5,4 +5,6 @@ import com.example.usermicroservice.domain.model.User;
 public interface IUserPersistencePort {
 
     public void saveUser(User user);
+
+    public String getRolName(Long id);
 }

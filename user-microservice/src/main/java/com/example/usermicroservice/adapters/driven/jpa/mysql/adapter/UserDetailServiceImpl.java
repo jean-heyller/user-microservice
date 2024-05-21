@@ -15,6 +15,7 @@ import com.example.usermicroservice.adapters.util.JwtUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
@@ -45,8 +47,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
     }
 
 
-
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -58,14 +58,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         return new User(user.getEmail(),
                 user.getPassword(),
-                user.getIsEnabled(),
-                user.getIsAccountNonExpired(),
-                user.getIsCredentialsNonExpired(),
-                user.getIsAccountNonLocked(),
                 authorities);
     }
 
-    public AuthResponse loginUser(AuthLoginRequest authLoginRequest){
+    public AuthResponse loginUser(AuthLoginRequest authLoginRequest) {
         String username = authLoginRequest.getUsername();
         String password = authLoginRequest.getPassword();
 
@@ -74,20 +70,20 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         String accessToken = jwtUtils.createToken(authentication);
 
-        return new AuthResponse(username, "User logged successfully", accessToken,true);
+        return new AuthResponse(username, "User logged successfully", accessToken, true);
     }
 
-    public Authentication authenticate(String username, String password){
+    public Authentication authenticate(String username, String password) {
         UserDetails userDetails = loadUserByUsername(username);
-        if (userDetails == null){
+        if (userDetails == null) {
             throw new BadCredentialsException();
         }
 
-        if (!passwordEncoder.matches(password, userDetails.getPassword())){
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException();
         }
 
-        return new UsernamePasswordAuthenticationToken(username,userDetails.getPassword(), userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(), userDetails.getAuthorities());
 
 
     }
@@ -109,5 +105,15 @@ public class UserDetailServiceImpl implements UserDetailsService {
         }
     }
 
+    public String getAuthority() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .map(authority -> authority.substring(5))
+                .findFirst()
+                .orElse(null);
+
+    }
 
 }

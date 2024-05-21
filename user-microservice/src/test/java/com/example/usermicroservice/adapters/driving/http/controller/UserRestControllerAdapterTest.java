@@ -4,6 +4,7 @@ import com.example.usermicroservice.adapters.driven.jpa.mysql.adapter.UserDetail
 import com.example.usermicroservice.adapters.driving.http.dto.request.AddUserRequest;
 import com.example.usermicroservice.adapters.driving.http.mapper.IUserRequestMapper;
 import com.example.usermicroservice.domain.api.IUserServicePort;
+import com.example.usermicroservice.domain.model.Rol;
 import com.example.usermicroservice.domain.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,26 @@ class UserRestControllerAdapterTest {
     @Mock
     private UserDetailServiceImpl userDetailService;
 
+    private Long id = 1L;
+
+    private String name = "John";
+
+    private String lastName = "Doe";
+
+    private String email = "prueba@hotmail.com";
+
+    private String password = "password123";
+
+    private String identification = "1234567890";
+
+    private String phone = "+57 304 291 8990";
+
+    private LocalDate birthDate = LocalDate.of(1990, 12, 12);
+
+    Rol rol = new Rol(1L, "ADMIN", "Administrator role");
+
+    private Long idRol = 1L;
+
 
     @BeforeEach
     void setUp() {
@@ -47,9 +69,8 @@ class UserRestControllerAdapterTest {
     void testAddUser() {
 
         Long rolId = 1L;
-        AddUserRequest request = new AddUserRequest("John", "Doe", "1234567890", "john.doe@example.com", "password123", rolId);
-        User user = new User(1L, "John", "Doe", "john.doe@example.com", "password123", "1234567890", null);
-
+        AddUserRequest request = new AddUserRequest("", lastName, identification, email, password, phone, birthDate, idRol);
+        User user = new User(id, name, lastName, email, password, identification, rol, phone, birthDate);
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));

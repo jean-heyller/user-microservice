@@ -1,6 +1,7 @@
 package com.example.usermicroservice.adapters.driven.jpa.mysql.adapter;
 
 import com.example.usermicroservice.adapters.driven.jpa.mysql.entity.RolEntity;
+import com.example.usermicroservice.adapters.driven.jpa.mysql.entity.UserEntity;
 import com.example.usermicroservice.adapters.driven.jpa.mysql.exceptions.DataNotFoundException;
 import com.example.usermicroservice.adapters.driven.jpa.mysql.exceptions.ValueAlreadyExitsException;
 import com.example.usermicroservice.adapters.driven.jpa.mysql.mapper.IRolEntityMapper;
@@ -58,5 +59,14 @@ public class UserAdapter implements IUserPersistencePort {
 
     }
 
+    @Override
+    public String getRolName(Long id) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new DataNotFoundException("User"));
+        if (userEntity == null) {
+            throw new DataNotFoundException(USER_EXISTS_ERROR_MESSAGE);
+        }
+        String name = userEntity.getRol().getName();
+        return name;
+    }
 
 }

@@ -3,6 +3,7 @@ package com.example.usermicroservice.adapters.driven.jpa.mysql.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "user")
@@ -33,22 +34,15 @@ public class UserEntity {
 
     private String password;
 
+    @Column(length = 50)
+    private String phone;
+
+    @Column(length = 50)
+    private LocalDate birthDate;
+
     @ManyToOne
     @JoinColumn(name = "id_rol")
     private RolEntity rol;
-
-    @Column(name = "is_enabled")
-    private Boolean isEnabled = true;
-
-    @Column(name = "is_account_non_expired")
-    private Boolean isAccountNonExpired = true;
-
-    @Column(name = "is_account_non_locked")
-    private Boolean isAccountNonLocked = true;
-
-    @Column(name = "is_credentials_non_expired")
-    private Boolean isCredentialsNonExpired = true;
-
 
 
 }
