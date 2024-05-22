@@ -14,4 +14,7 @@ public class AuthResponse {
 
     private final boolean status;
 
+    public String getToken() {
+        return jwt;
+    }
 }

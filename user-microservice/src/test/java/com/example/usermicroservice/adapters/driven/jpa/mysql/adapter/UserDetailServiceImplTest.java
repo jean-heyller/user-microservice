@@ -90,7 +90,7 @@ import static org.mockito.Mockito.*;
 
        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(userEntity));
        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
-       when(jwtUtils.createToken(any())).thenReturn("token");
+       when(jwtUtils.createToken(any(),anyLong())).thenReturn("token");
 
        AuthResponse authResponse = userDetailService.loginUser(authLoginRequest);
 

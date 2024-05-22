@@ -27,7 +27,7 @@ public class JwtUtils {
     private String userGenerator;
 
 
-    public String createToken(Authentication authentication) {
+    public String createToken(Authentication authentication, Long id) {
         Algorithm algorithm = Algorithm.HMAC256(this.privateKey);
 
         String username = authentication.getPrincipal().toString();
@@ -38,6 +38,7 @@ public class JwtUtils {
                 .withIssuer(this.userGenerator)
                 .withSubject(username)
                 .withClaim("authorities", authorities)
+                .withClaim("id", id)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 7200000))
                 .withJWTId(UUID.randomUUID().toString())

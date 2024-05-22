@@ -48,5 +48,4 @@ public class AuthenticactionController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthLoginRequest userRequest){
         return new ResponseEntity<>(this.userDetailService.loginUser(userRequest), HttpStatus.OK);
     }
-
 }

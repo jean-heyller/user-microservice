@@ -68,7 +68,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
         Authentication authentication = this.authenticate(username, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String accessToken = jwtUtils.createToken(authentication);
+        UserEntity userEntity = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        String accessToken = jwtUtils.createToken(authentication, userEntity.getId());
 
         return new AuthResponse(username, "User logged successfully", accessToken, true);
     }
