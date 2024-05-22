@@ -25,8 +25,7 @@ import javax.validation.Valid;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 @Validated
-/*@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")*/
-@PreAuthorize("permitAll()")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
 public class UserRestControllerAdapter {
 
     private final IUserRequestMapper userRequestMapper;
@@ -50,7 +49,6 @@ public class UserRestControllerAdapter {
     @PostMapping("/register")
     public ResponseEntity<Void> addUser(@Valid @RequestBody AddUserRequest request){
         this.userValidationService.validateUser(request.getRolId());
-        //this.userDetailService.validateUser(request.getRolId());
         userServicePort.saveUser(userRequestMapper.addRequestToUser(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

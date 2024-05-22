@@ -1,6 +1,8 @@
 package com.example.usermicroservice.adapters.driving.http.controller;
 
 import com.example.usermicroservice.adapters.driven.jpa.mysql.adapter.UserDetailServiceImpl;
+import com.example.usermicroservice.adapters.driven.jpa.mysql.adapter.UserValidationService;
+import com.example.usermicroservice.adapters.driven.jpa.mysql.exceptions.PermissionDeniedCreateUserException;
 import com.example.usermicroservice.adapters.driving.http.dto.request.AddUserRequest;
 import com.example.usermicroservice.adapters.driving.http.mapper.IUserRequestMapper;
 import com.example.usermicroservice.domain.api.IUserServicePort;
@@ -19,6 +21,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,9 @@ class UserRestControllerAdapterTest {
 
     @Mock
     private UserDetailServiceImpl userDetailService;
+
+    @Mock
+    private UserValidationService userValidationService;
 
     private Long id = 1L;
 
@@ -66,30 +72,41 @@ class UserRestControllerAdapterTest {
     }
 
     @Test
-    void testAddUser() {
-
-        Long rolId = 1L;
-        AddUserRequest request = new AddUserRequest("", lastName, identification, email, password, phone, birthDate, idRol);
+    void testAddUser_WithEmployeeRoleAndNonOwnerUser_ShouldThrowException() {
+        // Arrange
+        Long employeeRolId = 3L;
+        AddUserRequest request = new AddUserRequest("", lastName, identification, email, password, phone, birthDate, employeeRolId);
         User user = new User(id, name, lastName, email, password, identification, rol, phone, birthDate);
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER")); // Non-OWNER role
         UserDetails userDetails = new org.springframework.security.core.userdetails.User("john.doe@example.com", "password123", authorities);
-
 
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        doNothing().when(userDetailService).validateUser(rolId);
         when(userRequestMapper.addRequestToUser(request)).thenReturn(user);
-
-
-        ResponseEntity<Void> response = userRestControllerAdapter.addUser(request);
-
-
-        verify(userDetailService).validateUser(rolId);
-        verify(userServicePort).saveUser(user);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        doThrow(PermissionDeniedCreateUserException.class).when(userValidationService).validateUser(employeeRolId);
+        assertThrows(PermissionDeniedCreateUserException.class, () -> userRestControllerAdapter.addUser(request));
     }
 
+    @Test
+    void testAddUser_WithEmployeeRoleAndOwnerUser_ShouldNotThrowException() {
+
+        Long employeeRolId = 3L;
+        AddUserRequest request = new AddUserRequest("", lastName, identification, email, password, phone, birthDate, employeeRolId);
+        User user = new User(id, name, lastName, email, password, identification, rol, phone, birthDate);
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_OWNER")); // OWNER role
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User("john.doe@example.com", "password123", authorities);
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        when(userRequestMapper.addRequestToUser(request)).thenReturn(user);
+        doReturn(true).when(userValidationService).validateUser(employeeRolId);
+
+        assertDoesNotThrow(() -> userRestControllerAdapter.addUser(request));
+    }
 }

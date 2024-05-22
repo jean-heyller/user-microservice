@@ -1,8 +1,10 @@
 package com.example.usermicroservice.adapters.driving.http.controller;
 
 import com.example.usermicroservice.adapters.driving.http.dto.request.AddRolRequest;
+import com.example.usermicroservice.adapters.driving.http.dto.request.AddUserRequest;
 import com.example.usermicroservice.adapters.driving.http.mapper.IRolRequestMapper;
 import com.example.usermicroservice.domain.api.IRolServicePort;
+import com.example.usermicroservice.domain.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -44,4 +46,6 @@ class RolRequestControllerAdapterTest {
         assertEquals(ResponseEntity.status(HttpStatus.CREATED).build(), result);
         verify(rolServicePort, times(1)).saveRol(any());
     }
+
+
 }
