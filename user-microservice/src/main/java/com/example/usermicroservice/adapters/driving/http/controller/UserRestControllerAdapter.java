@@ -25,7 +25,7 @@ import javax.validation.Valid;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 @Validated
-@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_OWNER')")
 public class UserRestControllerAdapter {
 
     private final IUserRequestMapper userRequestMapper;
@@ -54,8 +54,21 @@ public class UserRestControllerAdapter {
     }
 
     @GetMapping("/getName")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<RolNameResponse> getRolName(@RequestParam Long id){
         return ResponseEntity.ok(new RolNameResponse(userServicePort.getRolName(id)));
+    }
+
+    @GetMapping("/getPhoneNumber")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<String> getPhoneNumber(@RequestParam Long id){
+        return ResponseEntity.ok(userServicePort.getPhoneNumber(id));
+    }
+
+    @GetMapping("/getEmail")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<String> getEmail(@RequestParam Long id){
+        return ResponseEntity.ok(userServicePort.getEmail(id));
     }
 
 }

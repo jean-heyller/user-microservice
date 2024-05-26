@@ -7,4 +7,10 @@ public interface IUserPersistencePort {
     public void saveUser(User user);
 
     public String getRolName(Long id);
+
+    public String getPhoneNumber(Long id);
+
+
+    public String getEmail(Long id);
+
 }

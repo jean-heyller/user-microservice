@@ -6,7 +6,7 @@ import java.util.List;
 public enum Rol {
 
     ADMIN(Arrays.asList("OWNER","RESTAURANT")),
-    OWNER(Arrays.asList("EMPLOYEE")),
+    OWNER(Arrays.asList("EMPLOYEE","CLIENT")),
     GUEST(Arrays.asList("READ"));
 
     private List<String> permisos;

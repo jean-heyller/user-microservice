@@ -29,4 +29,15 @@ public class UserUseCase implements IUserServicePort {
         return userPersistencePort.getRolName(id);
     }
 
+    @Override
+    public String getPhoneNumber(Long id) {
+        return userPersistencePort.getPhoneNumber(id);
+    }
+
+    @Override
+    public String getEmail(Long id) {
+        return userPersistencePort.getEmail(id);
+    }
+
+
 }

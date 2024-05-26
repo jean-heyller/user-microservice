@@ -69,4 +69,24 @@ public class UserAdapter implements IUserPersistencePort {
         return name;
     }
 
+    @Override
+    public String getPhoneNumber(Long id) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new DataNotFoundException("User"));
+        if (userEntity == null) {
+            throw new DataNotFoundException(USER_EXISTS_ERROR_MESSAGE);
+        }
+        String phoneNumber = userEntity.getPhone();
+        return phoneNumber;
+    }
+
+    @Override
+    public String getEmail(Long id) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new DataNotFoundException("User"));
+        if (userEntity == null) {
+            throw new DataNotFoundException(USER_EXISTS_ERROR_MESSAGE);
+        }
+        String email = userEntity.getEmail();
+        return email;
+    }
+
 }
